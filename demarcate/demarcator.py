@@ -39,7 +39,7 @@ with open(f'./{filefolder}/rot.odom') as f:
     lastYaw = 0
     for yaw in yaws:
         if abs(yaw - lastYaw) > 6:
-            deltaYaw += 6.28 - abs(yaw) - abs(lastYaw)
+            deltaYaw += min(6.28 - abs(yaw) + abs(lastYaw), 6.28 + abs(yaw) - abs(lastYaw) )
         else:
             deltaYaw += abs(yaw - lastYaw)
         lastYaw = yaw
