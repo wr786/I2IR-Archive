@@ -20,20 +20,20 @@ maxPulse = 30000
 # 标定编码器，DistancePerPulse与IMU
 with open(f'./{filefolder}/dis.odom') as f:
     datas = f.readlines()
-    pulses = [float(line[5]) for line in datas]
+    pulses = [float(line.split()[5]) for line in datas]
     accPulse = 0
     lastPulse = 0
     for pulse in pulses:
         accPulse += pulse - lastPulse
         if abs(pulse - lastPulse) > maxPulse / 2:   # 处理溢出
-            accPulse += 300
+            accPulse += 30000
         lastPulse = pulse
     print(f"[INFO] DistancePerPulse = {actualDist[agentID] / accPulse}")
 
 # 标定yaw变化量/真值
 with open(f'./{filefolder}/rot.odom') as f:
     datas = f.readlines()
-    yaws = [float(line[3]) for line in datas]
+    yaws = [float(line.split()[3]) for line in datas]
     # 如果突变大于6，就可以认为是溢出
     deltaYaw = 0
     lastYaw = 0
