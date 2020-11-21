@@ -14,7 +14,8 @@ filefolder = f'mini{agentID}'
 # dis.odom:小车直行一定距离产生的数据     注意： mini1、mini3、mini4直行1.0319米，mini7直行1.128米
 # rot.odom:小车原地旋转两圈（720度）产生的数据
 actualDist = {1: 1.0319, 3: 1.0319, 4: 1.0319, 7: 1.128}
-actualRot = 6.28    # rad
+PI = 3.1415926535897932384626
+actualRot = 2*PI    # rad
 maxPulse = 30000
 
 # 标定编码器，DistancePerPulse与IMU
@@ -26,7 +27,7 @@ with open(f'./{filefolder}/dis.odom') as f:
     for pulse in pulses:
         accPulse += pulse - lastPulse
         if abs(pulse - lastPulse) > maxPulse / 2:   # 处理溢出
-            accPulse += 30000
+            accPulse += maxPulse
         lastPulse = pulse
     print(f"[INFO] DistancePerPulse = {actualDist[agentID] / accPulse}")
 
@@ -39,7 +40,7 @@ with open(f'./{filefolder}/rot.odom') as f:
     lastYaw = 0
     for yaw in yaws:
         if abs(yaw - lastYaw) > 6:
-            deltaYaw += min(6.28 - abs(yaw) + abs(lastYaw), 6.28 + abs(yaw) - abs(lastYaw) )
+            deltaYaw += min(2*PI - abs(yaw) + abs(lastYaw), 2*PI + abs(yaw) - abs(lastYaw) )
         else:
             deltaYaw += abs(yaw - lastYaw)
         lastYaw = yaw
